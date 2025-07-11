@@ -1,0 +1,23 @@
+{
+  "name": "semantle",
+  "version": "1.0.0",
+  "description": "Semantic similarity dle game",
+  "homepage": "https://github.com/srpocock/Semantle#readme",
+  "bugs": {
+    "url": "https://github.com/srpocock/Semantle/issues"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/srpocock/Semantle.git"
+  },
+  "license": "ISC",
+  "author": "Simon Pocock",
+  "type": "commonjs",
+  "main": "index.js",
+  "scripts": {
+    "dev": "http-server -p 8080 -c-1"
+  },
+  "devDependencies": {
+    "http-server": "^14.1.1"
+  }
+}
