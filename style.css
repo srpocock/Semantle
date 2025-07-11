@@ -1,0 +1,14 @@
+[data-status="incorrect"] {
+    background-color: #f8d7da;
+    color: #721c24;
+}
+
+[data-status="correct"] {
+    background-color: #d4edda;
+    color: #155724;
+}
+
+[data-status="disabled"] {
+    background-color: #e9ecef;
+    color: #6c757d;
+}

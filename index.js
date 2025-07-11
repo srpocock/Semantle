@@ -8,15 +8,23 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
         step((generator = generator.apply(thisArg, _arguments || [])).next());
     });
 };
-let words = ["apple", "kettle", "fish", "furnace", "laughter", "concept", "distance", "tiktok", "dust"];
+const words = [
+    "umbrella",
+    "marble",
+    "astronaut",
+    "cactus",
+    "recipe",
+    "giraffe",
+    "pencil",
+    "echo",
+    "drum"
+];
 let wordRelatedness = [];
 let mostRelatedWords;
 let leastRelatedWords;
-let checkedWords = [-1, -1];
+let checkedWordsCounter = 0;
 let tiles = [];
 let numberOfAttempts = 0;
-const twoTilesChecked = new Event("twoTilesChecked");
-const notTwoTilesChecked = new Event("notTwoTilesChecked");
 var TileStatus;
 (function (TileStatus) {
     TileStatus["Untested"] = "untested";
@@ -93,66 +101,76 @@ populateRelatedness().then(() => {
     submitButton.textContent = "Submit";
     submitButton.disabled = true;
     gameDiv.appendChild(submitButton);
-    submitButton.addEventListener("twoTilesChecked", () => { console.log("two tiles checked event"); submitButton.disabled = false; });
-    submitButton.addEventListener("notTwoTilesChecked", () => { console.log("two tiles not checked event"); submitButton.disabled = true; });
+    const attemptsDiv = document.createElement("div");
+    attemptsDiv.textContent = `Attempts: ${numberOfAttempts}`;
+    gameDiv.appendChild(attemptsDiv);
     submitButton.addEventListener("click", function () {
-        if (words[checkedWords[0]] === mostRelatedWords[0] || words[checkedWords[0]] === mostRelatedWords[1]) {
+        const checkedWords = getCheckedWords();
+        if (mostRelatedWords.includes(words[checkedWords[0]])) {
             tiles[checkedWords[0]].setAttribute("data-status", TileStatus.Correct);
         }
         else {
             tiles[checkedWords[0]].setAttribute("data-status", TileStatus.Incorrect);
             tiles[checkedWords[0]].querySelector("input").checked = false;
-            tiles[checkedWords[0]].setAttribute("disabled", "");
-            ;
+            tiles[checkedWords[0]].querySelector("input").setAttribute("disabled", "");
         }
-        if (words[checkedWords[1]] === mostRelatedWords[0] || words[checkedWords[1]] === mostRelatedWords[1]) {
+        console.log("tested first word", words[checkedWords[0]]);
+        if (mostRelatedWords.includes(words[checkedWords[1]])) {
             tiles[checkedWords[1]].setAttribute("data-status", TileStatus.Correct);
         }
         else {
             tiles[checkedWords[1]].setAttribute("data-status", TileStatus.Incorrect);
-            tiles[checkedWords[0]].querySelector("input").checked = false;
-            tiles[checkedWords[0]].setAttribute("disabled", "");
-            ;
+            tiles[checkedWords[1]].querySelector("input").checked = false;
+            tiles[checkedWords[1]].querySelector("input").setAttribute("disabled", "");
+        }
+        console.log("tested second word", words[checkedWords[1]]);
+        updateSubmitButtonState();
+        if (mostRelatedWords.includes(words[checkedWords[0]]) && mostRelatedWords.includes(words[checkedWords[1]])) {
+            alert(`Congratulations! You found the most related words: ${mostRelatedWords[0]} and ${mostRelatedWords[1]} with a score of ${mostRelatedWords[2]}`);
         }
         numberOfAttempts++;
+        attemptsDiv.textContent = `Attempts: ${numberOfAttempts}`;
+        if (numberOfAttempts >= 3) {
+            alert(`Game over! You have used all your attempts. The most related words were: ${mostRelatedWords[0]} and ${mostRelatedWords[1]} with a score of ${mostRelatedWords[2]}`);
+            submitButton.disabled = true;
+            tiles.forEach((tile, index) => {
+                tile.querySelector("input").setAttribute("disabled", "");
+                tile.querySelector("input").checked = false;
+                if (mostRelatedWords.includes(words[index])) {
+                    tile.setAttribute("data-status", TileStatus.Correct);
+                }
+                else {
+                    tile.setAttribute("data-status", TileStatus.Untested);
+                }
+            });
+        }
     });
+    function updateSubmitButtonState() {
+        const checkedCount = getCheckedWords().filter(index => index !== -1).length;
+        submitButton.disabled = checkedCount !== 2;
+    }
+    function createWordTile(word) {
+        const tile = document.createElement("label");
+        tile.className = "word-tile";
+        tile.setAttribute("data-status", TileStatus.Untested);
+        const input = document.createElement("input");
+        input.type = "checkbox";
+        input.addEventListener("click", function (event) {
+            if (checkedWordsCounter >= 2 && !input.checked) {
+                event.preventDefault();
+                input.checked = false; // Prevent checking if already two words are selected;
+            }
+        });
+        input.addEventListener("change", function () {
+            updateSubmitButtonState();
+        });
+        tile.textContent = word;
+        tile.appendChild(input);
+        return tile;
+    }
+    function getCheckedWords() {
+        return tiles.map((tile, index) => tile.querySelector("input").checked ? index : -1).filter(index => index !== -1);
+    }
+    console.log("Most related words:", mostRelatedWords);
+    console.log("Least related words:", leastRelatedWords);
 });
-function createWordTile(word) {
-    const tile = document.createElement("label");
-    tile.className = "word-tile";
-    tile.setAttribute("data-status", TileStatus.Untested);
-    const input = document.createElement("input");
-    input.type = "checkbox";
-    input.addEventListener("change", function () {
-        if (input.checked) {
-            if (checkedWords[0] === -1) {
-                checkedWords[0] = words.indexOf(word);
-            }
-            else if (checkedWords[1] === -1) {
-                checkedWords[1] = words.indexOf(word);
-                this.dispatchEvent(twoTilesChecked);
-            }
-            else {
-                const tile = tiles[checkedWords[0]].querySelector("input");
-                if (!tile)
-                    return;
-                tile.checked = false;
-                checkedWords[0] = checkedWords[1];
-                checkedWords[1] = words.indexOf(word);
-                this.dispatchEvent(twoTilesChecked);
-            }
-        }
-        else {
-            if (checkedWords[0] === words.indexOf(word)) {
-                checkedWords[0] = -1;
-            }
-            else if (checkedWords[1] === words.indexOf(word)) {
-                checkedWords[1] = -1;
-            }
-            this.dispatchEvent(notTwoTilesChecked);
-        }
-    });
-    tile.textContent = word;
-    tile.appendChild(input);
-    return tile;
-}
