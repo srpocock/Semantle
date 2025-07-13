@@ -15,11 +15,13 @@ cardRegion?.addEventListener('mousemove', function (event) {
 
     if (card) {
         card.style.transform = `rotate3d(${Math.sin(planeAngle)}, ${Math.cos(planeAngle)}, 0, ${cardAngle}rad) translateZ(0px)`;
+        card.style.background = `linear-gradient(${-(planeAngle - Math.PI/2)}rad, rgb(238, 238, 238), rgb(${238 - dist/3}, ${238 - dist/3}, ${238 - dist/3}))`;
     }
 });
 
 cardRegion?.addEventListener('mouseleave', function () {
     if (card) {
         card.style.transform = 'rotate3d(0, 0, 0, 0rad) translateZ(-35px)';
+        card.style.background = `linear-gradient(0rad, rgb(238, 238, 238), rgb(238, 238, 238))`;
     }
 });
