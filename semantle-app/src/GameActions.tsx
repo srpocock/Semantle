@@ -1,5 +1,9 @@
-export default function GameActions() {
+type GameActionProps = { onSubmit: () => void };
+
+export default function GameActions({ onSubmit }: GameActionProps) {
     return (
-        <div>Game actions will go here</div>
+        <div>
+            <button onClick={onSubmit} >Submit</button>
+        </div>
     )
 }

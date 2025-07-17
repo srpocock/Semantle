@@ -21,7 +21,7 @@ let leastRelatedWords: [string, string, number] | undefined;
  * @returns Promise<number> - The relatedness score between the two words
  * @throws Error if the relatedness data is not found 
  */
-async function getRelatedness(word1: string, word2: string): Promise<number> {
+async function _getRelatednessAPI(word1: string, word2: string): Promise<number> {
     const relatednessAPI: string = "https://api.conceptnet.io/relatedness?";
     const url = `${relatednessAPI}node1=/c/en/${word1}&node2=/c/en/${word2}`;
     const response = await fetch(url);
@@ -43,7 +43,7 @@ async function initialise(): Promise<void> {
 
         wordList.forEach(function (word2, index2) {
             if (index1 < index2) {
-                const promise = getRelatedness(word1, word2)
+                const promise = _getRelatednessAPI(word1, word2)
                     .then((relatedness) => {
                         wordRelatedness[index1][index2] = relatedness;
                         wordRelatedness[index2][index1] = relatedness;
@@ -71,7 +71,7 @@ async function initialise(): Promise<void> {
 
 export default {
     wordList,
-    get relatedness() { return wordRelatedness; },
+    getRelatedness( word1: string, word2: string): number { return wordRelatedness[wordList.indexOf(word1)][wordList.indexOf(word2)]; },
     get mostRelated() { return mostRelatedWords; },
     get leastRelated() { return leastRelatedWords; },
     initialise
