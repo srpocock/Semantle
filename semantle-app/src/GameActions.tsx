@@ -1,9 +1,9 @@
-type GameActionProps = { onSubmit: () => void };
+type GameActionProps = { numCheckedWords: number, onSubmit: () => void };
 
-export default function GameActions({ onSubmit }: GameActionProps) {
+export default function GameActions({ numCheckedWords, onSubmit }: GameActionProps) {
     return (
         <div>
-            <button onClick={onSubmit} >Submit</button>
+            <button disabled={numCheckedWords != 2} onClick={onSubmit} >Submit</button>
         </div>
     )
 }

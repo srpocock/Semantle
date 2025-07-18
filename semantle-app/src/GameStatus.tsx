@@ -1,7 +1,9 @@
-export default function GameStatus() {
+type GameStatusProps = { attemptsLeft: number };
+
+export default function GameStatus( {attemptsLeft}: GameStatusProps) {
     return (
         <>
-            <div>This is where the game status will go, like attempts and stage - maybe instructions?</div>
+            <div>Attempts remaining: {attemptsLeft}</div>
         </>
     )
 }
