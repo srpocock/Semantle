@@ -38,6 +38,7 @@ export default function Game () {
             setGameState(GameState.Lost);
             return;
         }
+
     }
 
     useEffect(() => console.log(`Game state changed to: ${gameState}`), [gameState]);
@@ -46,7 +47,7 @@ export default function Game () {
         <section className="game">
             <GameStatus attemptsLeft={attemptsLeft}/>
             <WordGrid gameState={gameState} words={Words.wordList} checkedWords={checkedWords} onChecked={handleCheck} />
-            <GameActions numCheckedWords={checkedWords.length} onSubmit={handleSubmit} />
+            <GameActions gameState={gameState} numCheckedWords={checkedWords.length} onSubmit={handleSubmit} />
         </section>
     )
 
