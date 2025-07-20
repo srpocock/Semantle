@@ -1,7 +1,8 @@
 @import './Colours.css';
 
-body {
+:root {
     --gap-size: 2px;
+    font-family:'Gill Sans', 'Gill Sans MT', Calibri, 'Trebuchet MS', sans-serif;
 }
 
 fieldset {
@@ -39,7 +40,6 @@ display: grid;
     border-radius: 5px;
     color: black;
     font-size: 1.3rem;
-    font-family:'Gill Sans', 'Gill Sans MT', Calibri, 'Trebuchet MS', sans-serif;
     transform: translateZ(-35px);
     user-select: none;
     cursor: pointer;
