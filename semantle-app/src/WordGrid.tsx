@@ -23,7 +23,7 @@ function WordCard({ word, enabled, checked, testedState, onChecked }: WordCardPr
             const colourScale = [
                 startColour[0],
                 startColour[1],
-                startColour[2] - dist / 4
+                startColour[2] - dist / 5
             ];
             wordTileRef.current.style.background = `linear-gradient(${-(planeAngle - Math.PI / 2)}rad, hsl(${startColour[0]}, ${startColour[1]}%, ${startColour[2]}%), hsl(${colourScale[0]}, ${colourScale[1]}%, ${colourScale[2]}%))`;
         }

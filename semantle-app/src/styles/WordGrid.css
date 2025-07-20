@@ -13,12 +13,12 @@ fieldset {
 }
 
 .word-grid {
-display: grid;
-  grid-template-columns: repeat(3, 1fr);
-  grid-template-rows: repeat(3, 1fr);
-  gap: var(--gap-size) 0;
-  justify-items: center;
-  align-items: center;
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    grid-template-rows: repeat(3, 1fr);
+    gap: var(--gap-size) 0;
+    justify-items: center;
+    align-items: center;
 }
 
 .word-tile-container {
