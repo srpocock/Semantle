@@ -1,3 +1,5 @@
+@import './Colours.css';
+
 body {
     --gap-size: 2px;
 }
@@ -49,12 +51,12 @@ display: grid;
 }
 
 .word-tile[data-status="untested"]:has(input[type="checkbox"]:not(:checked)) {
-    background: rgb(250, 250, 250);
+    background: var(--word-tile-untested-unchecked);
 }
 
 .word-tile[data-status="untested"]:has(input[type="checkbox"]:checked) {
-    color: rgb(250, 250, 250);
-    background: rgb(110, 110, 110);
+    color: var(--white);
+    background: var(--word-tile-untested-checked);
 }
 
 .word-tile[data-status="incorrect"]:has(input[type="checkbox"]:disabled) {
@@ -63,12 +65,12 @@ display: grid;
 }
 
 .word-tile[data-status="incorrect"]:has(input[type="checkbox"]:not(:checked)) {
-    background: rgb(248, 211, 211);
+    background: var(--word-tile-incorrect-unchecked);
 }
 
 .word-tile[data-status="incorrect"]:has(input[type="checkbox"]:checked) {
-    color: rgb(250, 250, 250);
-    background: rgb(199, 31, 31);
+    color: var(--white);
+    background: var(--word-tile-incorrect-checked);
 }
 
 .word-tile[data-status="correct"]:has(input[type="checkbox"]:disabled) {
@@ -77,12 +79,12 @@ display: grid;
 }
 
 .word-tile[data-status="correct"]:has(input[type="checkbox"]:not(:checked)) {
-    background: rgb(212, 241, 199);
+    background: var(--word-tile-correct-unchecked);
 }
 
 .word-tile[data-status="correct"]:has(input[type="checkbox"]:checked) {
-    color: rgb(250, 250, 250);
-    background: rgb(21, 100, 25);
+    color: var(--white);
+    background: var(--word-tile-correct-checked);
 }
 
 .word-tile input[type="checkbox"] {

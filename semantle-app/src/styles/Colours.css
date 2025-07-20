@@ -1,0 +1,9 @@
+:root {
+    --white: hsl(0, 0%, 98%);
+    --word-tile-untested-unchecked: hsl(0, 0%, 98%);
+    --word-tile-untested-checked: hsl(0, 0%, 43%);
+    --word-tile-incorrect-unchecked: hsl(0, 73%, 90%);
+    --word-tile-incorrect-checked: hsl(0, 73%, 45%);
+    --word-tile-correct-unchecked: hsl(120, 100%, 90%);
+    --word-tile-correct-checked: hsl(120, 100%, 29%);
+}
