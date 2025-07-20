@@ -47,6 +47,8 @@ export default function Game () {
                 ...checkedWordStates
             }));
 
+            setCheckedWords([]);
+
             setAttemptsLeft(prev => prev - 1);
 
             if( attemptsLeft <= 1) {

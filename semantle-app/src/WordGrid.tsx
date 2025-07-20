@@ -1,5 +1,5 @@
 import './styles/WordGrid.css'
-import { useRef, useEffect } from 'react'
+import { useRef, useEffect, useState, useCallback } from 'react'
 import { GameState, type GameStateType } from './GameState';
 import { WordState, type WordStateType, type WordStatesType } from './WordState';
 import { tileStateColours } from './Colours';
@@ -8,11 +8,11 @@ type GridProps = { gameState: GameStateType, words: string[], checkedWords: stri
 type WordCardProps = { word: string, enabled: boolean, checked: boolean, testedState: WordStateType, onChecked: (word: string, checked: boolean) => void };
 
 function WordCard({ word, enabled, checked, testedState, onChecked }: WordCardProps) {
-
-    let mouseDown = false;
+    const [pressed, setPressed] = useState(false);
     const wordTileRef = useRef<HTMLDivElement>(null);
+    const mousePosition = useRef<{ x: number | null, y: number | null }>({ x: null, y: null });
 
-    function setCardRotationAndColour(x: number, y: number, z: number) {
+    const setCardRotationAndColour = useCallback((x: number, y: number, z: number) => {
         const dist = Math.sqrt(x * x + y * y);
         const planeAngle = Math.atan2(-y, x);
         const cardAngle = Math.atan2(dist, z);
@@ -27,47 +27,37 @@ function WordCard({ word, enabled, checked, testedState, onChecked }: WordCardPr
             ];
             wordTileRef.current.style.background = `linear-gradient(${-(planeAngle - Math.PI / 2)}rad, hsl(${startColour[0]}, ${startColour[1]}%, ${startColour[2]}%), hsl(${colourScale[0]}, ${colourScale[1]}%, ${colourScale[2]}%))`;
         }
-    }
+    }, [testedState, checked]);
 
     function handleMouseMove(event: React.MouseEvent<HTMLLabelElement>) {
-        if (!mouseDown && enabled) {
+        if (enabled) {
             const rect = event.currentTarget.getBoundingClientRect();
-            const x = event.clientX - (rect.left + rect.width / 2);
-            const y = event.clientY - (rect.top + rect.height / 2);
+            mousePosition.current.x = event.clientX - (rect.left + rect.width / 2);
+            mousePosition.current.y = event.clientY - (rect.top + rect.height / 2);
             const z = 250;
 
-            setCardRotationAndColour(x, y, z);
+            setCardRotationAndColour(mousePosition.current.x, mousePosition.current.y, z);
         }
     }
 
     function handleMouseDown() {
-        mouseDown = true;
-        if (wordTileRef.current && enabled) {
-            wordTileRef.current.style.transition = '0s';
-            wordTileRef.current.style.transform = `rotate3d(0, 0, 0, 0) translateZ(-55px)`;
-            wordTileRef.current.style.removeProperty('transition');
+        if (enabled) {
+            setPressed(true);
         }
     }
 
-    function handleMouseUp(event: React.MouseEvent<HTMLLabelElement>) {
-        mouseDown = false;
-
-        console.log(event.currentTarget);
-
-        const rect = event.currentTarget.getBoundingClientRect();
-        const x = event.clientX - (rect.left + rect.width / 2);
-        const y = event.clientY - (rect.top + rect.height / 2);
-        const z = 250;
-
-        console.log(`Mouse up at: (${x}, ${y})`);
-        
-        setCardRotationAndColour(x, y, z);
+    function handleMouseUp() {
+        if (enabled) {
+            setPressed(false);
+        }
     }
 
     function handleMouseLeave() {
-        mouseDown = false;
         if (wordTileRef.current) {
             wordTileRef.current.removeAttribute('style');
+
+            mousePosition.current.x = null;
+            mousePosition.current.y = null;
         }
     }
 
@@ -75,11 +65,14 @@ function WordCard({ word, enabled, checked, testedState, onChecked }: WordCardPr
         if (wordTileRef.current) {
             wordTileRef.current.removeAttribute('style');
         }
-    }, [checked]);
+        if (mousePosition.current.x !== null && mousePosition.current.y !== null) {
+            setCardRotationAndColour(mousePosition.current.x, mousePosition.current.y, 250);
+        }
+    }, [checked, setCardRotationAndColour]);
 
     return (
         <label className="word-tile-container" onMouseMove={handleMouseMove} onMouseLeave={handleMouseLeave} onMouseDown={handleMouseDown} onMouseUp={handleMouseUp}>
-            <div ref={wordTileRef} className="word-tile" data-status={testedState}>
+            <div ref={wordTileRef} className="word-tile" data-status={testedState} style={{ scale: pressed ? '0.9' : '1' }}>
                 <input type="checkbox" checked={checked} disabled={!enabled} onChange={e => onChecked(word, e.target.checked)} />
                 {word}
             </div>
