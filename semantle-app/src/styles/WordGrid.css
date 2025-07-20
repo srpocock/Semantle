@@ -10,6 +10,7 @@ fieldset {
     margin: auto;
     width: 100%;
     max-width: calc(3*150px + 2*var(--gap-size));
+    margin: 25px 0;
 }
 
 .word-grid {

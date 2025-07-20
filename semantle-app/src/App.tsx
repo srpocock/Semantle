@@ -5,7 +5,6 @@ import Game from './Game';
 function App() {
   return (
     <>
-      <h1>Semantle</h1>
       <Game />
     </>
   )

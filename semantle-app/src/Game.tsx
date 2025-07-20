@@ -62,6 +62,7 @@ export default function Game () {
 
     return (
         <section className="game">
+            <h1>Semantle</h1>
             <GameStatus attemptsLeft={attemptsLeft}/>
             <WordGrid gameState={gameState} words={Words.wordList} checkedWords={checkedWords} testedWords={testedWords} onChecked={handleCheck} />
             <GameActions gameState={gameState} numCheckedWords={checkedWords.length} onSubmit={handleSubmit} />
