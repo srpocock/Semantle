@@ -12,3 +12,33 @@
     background-color: #e9ecef;
     color: #6c757d;
 }
+
+.cards-region {
+    padding: 20px;
+    background-color: grey;
+}
+
+.card-region {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 200px;
+    height: 125px;
+    background-color: grey;
+    perspective: 500px;
+}
+
+.card {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 200px;
+    height: 125px;
+    background: linear-gradient(rgb(238, 238, 238));
+    border: 2px solid black;
+    border-radius: 20px;
+    font-size: large;
+    font-family:'Gill Sans', 'Gill Sans MT', Calibri, 'Trebuchet MS', sans-serif;
+    transform: translateZ(-35px);
+    transition: 0.06s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+}

@@ -1,0 +1,54 @@
+body {
+    --gap-size: 5px;
+}
+
+fieldset {
+    all: unset;
+    margin: auto;
+    width: 100%;
+    max-width: calc(3*150px + 6*1px + 2*var(--gap-size));
+}
+
+.word-grid {
+display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  grid-template-rows: repeat(3, 1fr);
+  gap: var(--gap-size);
+  justify-items: center;
+  align-items: center;
+}
+
+.word-tile-container {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 150px;
+    height: 80px;
+    perspective: 500px;
+}
+
+.word-tile {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 150px;
+    height: 80px;
+    background: linear-gradient(rgb(238, 238, 238));
+    border: 1px solid black;
+    border-radius: 5px;
+    font-size: large;
+    font-family:'Gill Sans', 'Gill Sans MT', Calibri, 'Trebuchet MS', sans-serif;
+    transform: translateZ(-35px);
+    transition: 0.06s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+}
+
+.word-tile input[type="checkbox"] {
+  /* Visually hide but keep accessible */
+  position: absolute;
+  opacity: 0;
+  width: 1px;
+  height: 1px;
+  margin: 0;
+  padding: 0;
+  pointer-events: auto;
+}
