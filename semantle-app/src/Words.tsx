@@ -1,13 +1,13 @@
-const wordList: string[] = [
-  "umbrella",
-  "marble",
-  "astronaut",
-  "cactus",
-  "recipe",
-  "giraffe",
-  "pencil",
-  "echo",
-  "drum"
+const wordList: string[] =[
+  "volcano",
+  "violin",
+  "sandwich",
+  "satellite",
+  "kangaroo",
+  "wallet",
+  "glacier",
+  "lantern",
+  "trampoline"
 ];
 
 const wordRelatedness: number[][] = [];
@@ -71,7 +71,9 @@ async function initialise(): Promise<void> {
 
 export default {
     wordList,
-    getRelatedness( word1: string, word2: string): number { return wordRelatedness[wordList.indexOf(word1)][wordList.indexOf(word2)]; },
+    getRelatedness (word1: string, word2: string): number { return wordRelatedness[wordList.indexOf(word1)][wordList.indexOf(word2)]; },
+    inMostRelated (word: string): boolean { return mostRelatedWords ? (mostRelatedWords[0] === word || mostRelatedWords[1] === word) : false; },
+    inLeastRelated (word: string): boolean { return leastRelatedWords ? (leastRelatedWords[0] === word || leastRelatedWords[1] === word) : false; },
     get mostRelated() { return mostRelatedWords; },
     get leastRelated() { return leastRelatedWords; },
     initialise

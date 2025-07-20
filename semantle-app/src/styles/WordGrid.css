@@ -1,19 +1,19 @@
 body {
-    --gap-size: 5px;
+    --gap-size: 2px;
 }
 
 fieldset {
     all: unset;
     margin: auto;
     width: 100%;
-    max-width: calc(3*150px + 6*1px + 2*var(--gap-size));
+    max-width: calc(3*150px + 2*var(--gap-size));
 }
 
 .word-grid {
 display: grid;
   grid-template-columns: repeat(3, 1fr);
   grid-template-rows: repeat(3, 1fr);
-  gap: var(--gap-size);
+  gap: var(--gap-size) 0;
   justify-items: center;
   align-items: center;
 }
@@ -25,6 +25,7 @@ display: grid;
     width: 150px;
     height: 80px;
     perspective: 500px;
+    user-select: none;
 }
 
 .word-tile {
@@ -33,13 +34,55 @@ display: grid;
     justify-content: center;
     width: 150px;
     height: 80px;
-    background: linear-gradient(rgb(238, 238, 238));
-    border: 1px solid black;
     border-radius: 5px;
-    font-size: large;
+    color: black;
+    font-size: 1.3rem;
     font-family:'Gill Sans', 'Gill Sans MT', Calibri, 'Trebuchet MS', sans-serif;
     transform: translateZ(-35px);
-    transition: 0.06s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+    user-select: none;
+    cursor: pointer;
+}
+
+.word-tile[data-status="untested"]:has(input[type="checkbox"]:disabled) {
+    opacity: 0.7;
+    cursor: unset;
+}
+
+.word-tile[data-status="untested"]:has(input[type="checkbox"]:not(:checked)) {
+    background: rgb(250, 250, 250);
+}
+
+.word-tile[data-status="untested"]:has(input[type="checkbox"]:checked) {
+    color: rgb(250, 250, 250);
+    background: rgb(110, 110, 110);
+}
+
+.word-tile[data-status="incorrect"]:has(input[type="checkbox"]:disabled) {
+    opacity: 0.7;
+    cursor: unset;
+}
+
+.word-tile[data-status="incorrect"]:has(input[type="checkbox"]:not(:checked)) {
+    background: rgb(248, 211, 211);
+}
+
+.word-tile[data-status="incorrect"]:has(input[type="checkbox"]:checked) {
+    color: rgb(250, 250, 250);
+    background: rgb(199, 31, 31);
+}
+
+.word-tile[data-status="correct"]:has(input[type="checkbox"]:disabled) {
+    opacity: 0.7;
+    cursor: unset;
+}
+
+.word-tile[data-status="correct"]:has(input[type="checkbox"]:not(:checked)) {
+    background: rgb(212, 241, 199);
+}
+
+.word-tile[data-status="correct"]:has(input[type="checkbox"]:checked) {
+    color: rgb(250, 250, 250);
+    background: rgb(21, 100, 25);
 }
 
 .word-tile input[type="checkbox"] {
