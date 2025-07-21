@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react';
 import GameStatus from './GameStatus';
 import WordGrid from './WordGrid';
-import GameActions from './GameActions';
+import SubmissionPanel from './SubmissionPanel';
 import Words from './Words';
 import { GameState, type GameStateType } from './GameState';
 import { WordState, type WordStatesType } from './WordState';
@@ -13,7 +13,7 @@ export default function Game () {
     const [checkedWords, setCheckedWords] = useState<string[]>([]);
     const [testedWords, setTestedWords] = useState<WordStatesType>({});
     const [gameState, setGameState] = useState<GameStateType>(GameState.Playing);
-    const [attemptsLeft, setAttemptsLeft] = useState(3);
+    const [attemptsRemaining, setAttemptsRemaining] = useState(3);
 
     function handleCheck (word: string, checked: boolean) {
         // Make sure only a maximum of 2 words are checked
@@ -49,9 +49,9 @@ export default function Game () {
 
             setCheckedWords([]);
 
-            setAttemptsLeft(prev => prev - 1);
+            setAttemptsRemaining(prev => prev - 1);
 
-            if( attemptsLeft <= 1) {
+            if( attemptsRemaining <= 1) {
                 setGameState(GameState.Lost);
                 return;
             }
@@ -63,9 +63,9 @@ export default function Game () {
     return (
         <section className="game">
             <h1>Semantle</h1>
-            <GameStatus attemptsLeft={attemptsLeft}/>
+            <GameStatus attemptsLeft={attemptsRemaining}/>
             <WordGrid gameState={gameState} words={Words.wordList} checkedWords={checkedWords} testedWords={testedWords} onChecked={handleCheck} />
-            <GameActions gameState={gameState} numCheckedWords={checkedWords.length} onSubmit={handleSubmit} />
+            <SubmissionPanel gameState={gameState} numCheckedWords={checkedWords.length} attemptsRemaining={attemptsRemaining} onSubmit={handleSubmit} />
         </section>
     )
 
