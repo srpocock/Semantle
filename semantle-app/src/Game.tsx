@@ -29,13 +29,7 @@ export default function Game () {
     function handleSubmit () {
 
         if (Words.mostRelated) {
-
-            // If both words are the most related pair, the player wins
-            if (Words.inMostRelated(checkedWords[0]) && Words.inMostRelated(checkedWords[1])) {
-                setGameState(GameState.Won);
-                return;
-            }
-
+            
             // Since the game is not won, set the states of the checked words appropriately
             const checkedWordStates: WordStatesType = {};
             checkedWords.forEach((word) => 
@@ -49,11 +43,19 @@ export default function Game () {
 
             setCheckedWords([]);
 
-            setAttemptsRemaining(prev => prev - 1);
-
+            if (Words.inMostRelated(checkedWords[0]) && Words.inMostRelated(checkedWords[1])) {
+                checkedWords.forEach((word) => checkedWordStates[word] = WordState.Flipped);
+                setTestedWords((prev) => ({
+                    ...prev,
+                    ...checkedWordStates
+                }));
+                // setGameState(GameState.Won);
+            } else {
+                setAttemptsRemaining((prev) => prev - 1);
+            }
+            
             if( attemptsRemaining <= 1) {
                 setGameState(GameState.Lost);
-                return;
             }
         }
     }
@@ -63,7 +65,7 @@ export default function Game () {
     return (
         <section className="game">
             <h1>Semantle</h1>
-            <GameStatus attemptsLeft={attemptsRemaining}/>
+            <GameStatus/>
             <WordGrid gameState={gameState} words={Words.wordList} checkedWords={checkedWords} testedWords={testedWords} onChecked={handleCheck} />
             <SubmissionPanel gameState={gameState} numCheckedWords={checkedWords.length} attemptsRemaining={attemptsRemaining} onSubmit={handleSubmit} />
         </section>

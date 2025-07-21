@@ -2,7 +2,8 @@
 const WordState = {
     Untested: "untested",
     Incorrect: "incorrect",
-    Correct: "correct"
+    Correct: "correct",
+    Flipped: "flipped"
 } as const
 type WordStateType = typeof WordState[keyof typeof WordState];
 

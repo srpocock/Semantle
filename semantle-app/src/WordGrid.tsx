@@ -87,7 +87,7 @@ export default function WordGrid({ gameState, words, checkedWords, testedWords, 
                 <WordCard
                     key={index}
                     word={word}
-                    enabled={gameState === GameState.Playing && (checkedWords.length < 2 || checkedWords.includes(word))}
+                    enabled={testedWords[word] !== WordState.Flipped && gameState === GameState.Playing && (checkedWords.length < 2 || checkedWords.includes(word))}
                     checked={checkedWords.includes(word)}
                     testedState={testedWords[word] || WordState.Untested}
                     onChecked={onChecked} />

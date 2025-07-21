@@ -1,6 +1,11 @@
 import { WordState, type WordStateType } from './WordState';
 import './styles/Colours.css';
 
+/*
+* Utility functions to retrieve CSS variable colours in HSL format. 
+* We use HSL so that it's easy to tweak lightness with 3d word tiles
+*/
+
 function getCssVarHSL(name: string): [number, number, number] {
     const value = getComputedStyle(document.documentElement).getPropertyValue(name).trim();
     // Match hsl(h, s%, l%)

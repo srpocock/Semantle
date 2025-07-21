@@ -44,6 +44,7 @@ fieldset {
     transform: translateZ(-35px);
     user-select: none;
     cursor: pointer;
+    backface-visibility: hidden;
 }
 
 .word-tile[data-status="untested"]:has(input[type="checkbox"]:disabled) {
@@ -86,6 +87,13 @@ fieldset {
 .word-tile[data-status="correct"]:has(input[type="checkbox"]:checked) {
     color: var(--white);
     background: var(--word-tile-correct-checked);
+}
+
+.word-tile[data-status="flipped"] {
+    transition: transform 0.5s ease-in-out;
+    transform: rotate3D(0,1,0, 180deg) translateZ(35px);
+    cursor: unset;
+    background: var(--word-tile-correct-unchecked);
 }
 
 .word-tile input[type="checkbox"] {
