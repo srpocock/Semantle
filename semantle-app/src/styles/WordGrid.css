@@ -90,10 +90,25 @@ fieldset {
 }
 
 .word-tile[data-status="flipped"] {
-    transition: transform 0.5s ease-in-out;
+    animation: word-tile-flip-sequence 1s forwards;
     transform: rotate3D(0,1,0, 180deg) translateZ(35px);
     cursor: unset;
     background: var(--word-tile-correct-unchecked);
+}
+
+@keyframes word-tile-flip-sequence {
+  0% {
+    transform: translateZ(-35px);
+  }
+  25% {
+    transform: translateZ(0px);
+  }
+  75% {
+    transform: rotate3D(0,1,0, 180deg) translateZ(0px);
+  }
+  100% {
+    transform: rotate3D(0,1,0, 180deg) translateZ(35px);
+  }
 }
 
 .word-tile input[type="checkbox"] {
