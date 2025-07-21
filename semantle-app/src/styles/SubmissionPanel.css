@@ -28,19 +28,10 @@
     justify-content: space-between;
 }
 
-.attempt-bubbles-container[data-attempts-remaining="1"] .attempt-bubble:nth-child(1) {
-    background-color: var(--button-background);
-}
-
-.attempt-bubbles-container[data-attempts-remaining="2"] .attempt-bubble:nth-child(1),
-.attempt-bubbles-container[data-attempts-remaining="2"] .attempt-bubble:nth-child(2) {
-    background-color: var(--button-background);
-}
-
-.attempt-bubbles-container[data-attempts-remaining="3"] .attempt-bubble:nth-child(1),
-.attempt-bubbles-container[data-attempts-remaining="3"] .attempt-bubble:nth-child(2),
-.attempt-bubbles-container[data-attempts-remaining="3"] .attempt-bubble:nth-child(3) {
-    background-color: var(--button-background);
+.attempt-bubbles-container[data-attempts-remaining="1"] .attempt-bubble:nth-child(-n + 1),
+.attempt-bubbles-container[data-attempts-remaining="2"] .attempt-bubble:nth-child(-n + 2),
+.attempt-bubbles-container[data-attempts-remaining="3"] .attempt-bubble:nth-child(-n + 3) {
+  background-color: var(--button-background);
 }
 
 .attempt-bubble {

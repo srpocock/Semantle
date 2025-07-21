@@ -14,6 +14,7 @@ export default function Game () {
     const [testedWords, setTestedWords] = useState<WordStatesType>({});
     const [gameState, setGameState] = useState<GameStateType>(GameState.Playing);
     const [attemptsRemaining, setAttemptsRemaining] = useState(3);
+    const [gameStep, setGameStep] = useState(0);
 
     function handleCheck (word: string, checked: boolean) {
         // Make sure only a maximum of 2 words are checked
@@ -28,12 +29,14 @@ export default function Game () {
 
     function handleSubmit () {
 
-        if (Words.mostRelated) {
+        if (Words.wordList) {
             
-            // Since the game is not won, set the states of the checked words appropriately
+            console.log("Here");
+
+
             const checkedWordStates: WordStatesType = {};
             checkedWords.forEach((word) => 
-                Words.inMostRelated(word) ? checkedWordStates[word] = WordState.Correct : checkedWordStates[word] = WordState.Incorrect
+                Words.inCorrectPair(word, gameStep) ? checkedWordStates[word] = WordState.Correct : checkedWordStates[word] = WordState.Incorrect
             );
 
             setTestedWords((prev) => ({
@@ -43,13 +46,23 @@ export default function Game () {
 
             setCheckedWords([]);
 
-            if (Words.inMostRelated(checkedWords[0]) && Words.inMostRelated(checkedWords[1])) {
+            if (Words.inCorrectPair(checkedWords[0], gameStep) && Words.inCorrectPair(checkedWords[1], gameStep)) {
+                console.log("Correct, game step:", gameStep);
+
                 checkedWords.forEach((word) => checkedWordStates[word] = WordState.Flipped);
                 setTestedWords((prev) => ({
                     ...prev,
                     ...checkedWordStates
                 }));
                 // setGameState(GameState.Won);
+                setGameStep((prev) => prev + 1);
+                setCheckedWords([]);
+
+                setTestedWords((prev) => (
+                    {
+                        ...Object.fromEntries(Object.entries(prev).filter(([_key, value]) => value === WordState.Flipped)),
+                        ...checkedWordStates
+                    }));
             } else {
                 setAttemptsRemaining((prev) => prev - 1);
             }

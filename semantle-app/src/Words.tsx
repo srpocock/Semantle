@@ -1,18 +1,19 @@
-const wordList: string[] =[
-  "volcano",
-  "violin",
-  "sandwich",
-  "satellite",
-  "kangaroo",
-  "wallet",
-  "glacier",
-  "lantern",
-  "trampoline"
+const wordList: string[] = [
+  "cactus",
+  "umbrella",
+  "galaxy",
+  "whistle",
+  "marble",
+  "justice",
+  "keyboard",
+  "avalanche",
+  "lighthouse"
 ];
 
-const wordRelatedness: number[][] = [];
-let mostRelatedWords: [string, string, number] | undefined;
-let leastRelatedWords: [string, string, number] | undefined;
+type WordRelatednessType = [string, string, number];
+
+const wordRelatedness: WordRelatednessType[] = [];
+const winningPairs: WordRelatednessType[] = [];
 
 /**
  * Fetch the relatedness score between two words using the ConceptNet Numberbatch API.
@@ -37,44 +38,45 @@ async function _getRelatednessAPI(word1: string, word2: string): Promise<number>
 async function initialise(): Promise<void> {
     const promises: Promise<void>[] = [];
 
-    wordList.forEach(function (word1, index1) {
-        wordRelatedness[index1] = [];
-        wordRelatedness[index1][index1] = 1;
+    for (let i = 0; i < wordList.length; i++) {
+        for (let j = i + 1; j < wordList.length; j++) {
+            const index = (i * (2 * wordList.length - i - 1)) / 2 + (j - i - 1);
+            const promise = _getRelatednessAPI(wordList[i], wordList[j])
+                .then((relatedness) => {
+                    wordRelatedness[index] = [wordList[i], wordList[j], relatedness];
+                }).catch((error) => {
+                    console.error(`Error fetching relatedness for ${wordList[0]} and ${wordList[1]}:`, error);
+                });
 
-        wordList.forEach(function (word2, index2) {
-            if (index1 < index2) {
-                const promise = _getRelatednessAPI(word1, word2)
-                    .then((relatedness) => {
-                        wordRelatedness[index1][index2] = relatedness;
-                        wordRelatedness[index2][index1] = relatedness;
+            promises.push(promise);
+        }
+    }
 
-                        if (mostRelatedWords === undefined || relatedness > mostRelatedWords[2]) {
-                            mostRelatedWords = [word1, word2, relatedness];
-                        }
-
-                        if (leastRelatedWords === undefined || relatedness < leastRelatedWords[2]) {
-                            leastRelatedWords = [word1, word2, relatedness];
-                        }
-                    })
-                    .catch((error) => {
-                        console.error(`Error fetching relatedness for ${word1} and ${word2}:`, error);
-                    });
-
-                promises.push(promise);
-            }
-        });
-    });
-
-    // Wait for all getRelatedness calls to complete
     await Promise.all(promises);
+
+    //wordRelatedness.forEach((pair) => console.log(`Relatedness between ${pair[0]} and ${pair[1]}: ${pair[2]}`));
+
+     // Sort by relatedness score descending
+    wordRelatedness.sort((a, b) => b[2] - a[2]);
+
+    // Construct sets of winning words
+    const previouslyWinningPairs = new Set<string>();
+
+    for (let i = 0; i < wordRelatedness.length; i++) {
+        if (!previouslyWinningPairs.has(wordRelatedness[i][0]) && !previouslyWinningPairs.has(wordRelatedness[i][1])) {
+            winningPairs.push(wordRelatedness[i]);
+            previouslyWinningPairs.add(wordRelatedness[i][0]);
+            previouslyWinningPairs.add(wordRelatedness[i][1]);
+        }
+    }
+
+    previouslyWinningPairs.clear();
+    console.log("Winning pairs:", winningPairs);
 }
 
 export default {
     wordList,
-    getRelatedness (word1: string, word2: string): number { return wordRelatedness[wordList.indexOf(word1)][wordList.indexOf(word2)]; },
-    inMostRelated (word: string): boolean { return mostRelatedWords ? (mostRelatedWords[0] === word || mostRelatedWords[1] === word) : false; },
-    inLeastRelated (word: string): boolean { return leastRelatedWords ? (leastRelatedWords[0] === word || leastRelatedWords[1] === word) : false; },
-    get mostRelated() { return mostRelatedWords; },
-    get leastRelated() { return leastRelatedWords; },
+    // getRelatedness (word1: string, word2: string): number { return wordRelatedness[wordList.indexOf(word1)][wordList.indexOf(word2)]; },
+    inCorrectPair (word: string, gameStep: number): boolean { return winningPairs ? (winningPairs[gameStep][0] === word || winningPairs[gameStep][1] === word) : false; },
     initialise
 };
