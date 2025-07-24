@@ -10,6 +10,7 @@ type WordCardProps = { word: string, enabled: boolean, checked: boolean, testedS
 function WordCard({ word, enabled, checked, testedState, onChecked }: WordCardProps) {
     const [pressed, setPressed] = useState(false);
     const wordTileRef = useRef<HTMLDivElement>(null);
+    const wordTileFrontRef = useRef<HTMLDivElement>(null);
     const mousePosition = useRef<{ x: number | null, y: number | null }>({ x: null, y: null });
 
     const setCardRotationAndColour = useCallback((x: number, y: number, z: number) => {
@@ -19,13 +20,15 @@ function WordCard({ word, enabled, checked, testedState, onChecked }: WordCardPr
 
         if (wordTileRef.current) {
             wordTileRef.current.style.transform = `rotate3d(${Math.sin(planeAngle)}, ${Math.cos(planeAngle)}, 0, ${cardAngle}rad) translateZ(0px)`;
+        }
+        if (wordTileFrontRef.current) {
             const startColour = tileStateColours(testedState, checked);
             const colourScale = [
                 startColour[0],
                 startColour[1],
                 startColour[2] - dist / 5
             ];
-            wordTileRef.current.style.background = `linear-gradient(${-(planeAngle - Math.PI / 2)}rad, hsl(${startColour[0]}, ${startColour[1]}%, ${startColour[2]}%), hsl(${colourScale[0]}, ${colourScale[1]}%, ${colourScale[2]}%))`;
+            wordTileFrontRef.current.style.background = `linear-gradient(${-(planeAngle - Math.PI / 2)}rad, hsl(${startColour[0]}, ${startColour[1]}%, ${startColour[2]}%), hsl(${colourScale[0]}, ${colourScale[1]}%, ${colourScale[2]}%))`;
         }
     }, [testedState, checked]);
 
@@ -55,16 +58,26 @@ function WordCard({ word, enabled, checked, testedState, onChecked }: WordCardPr
     function handleMouseLeave() {
         if (wordTileRef.current) {
             wordTileRef.current.removeAttribute('style');
-
-            mousePosition.current.x = null;
-            mousePosition.current.y = null;
         }
+        
+        if (wordTileFrontRef.current) {
+            wordTileFrontRef.current.removeAttribute('style');
+        }
+
+        mousePosition.current.x = null;
+        mousePosition.current.y = null;
+    
     }
 
     useEffect(() => {
         if (wordTileRef.current) {
             wordTileRef.current.removeAttribute('style');
         }
+
+        if (wordTileFrontRef.current) {
+            wordTileFrontRef.current.removeAttribute('style');
+        }
+
         if (mousePosition.current.x !== null && mousePosition.current.y !== null) {
             setCardRotationAndColour(mousePosition.current.x, mousePosition.current.y, 250);
         }
@@ -73,8 +86,11 @@ function WordCard({ word, enabled, checked, testedState, onChecked }: WordCardPr
     return (
         <label className="word-tile-container" onMouseMove={handleMouseMove} onMouseLeave={handleMouseLeave} onMouseDown={handleMouseDown} onMouseUp={handleMouseUp}>
             <div ref={wordTileRef} className="word-tile" data-status={testedState} style={{ scale: pressed ? '0.9' : '1' }}>
-                <input type="checkbox" checked={checked} disabled={!enabled} onChange={e => onChecked(word, e.target.checked)} />
-                {word}
+                <div ref={wordTileFrontRef} className="word-tile-front">
+                    <input type="checkbox" checked={checked} disabled={!enabled} onChange={e => onChecked(word, e.target.checked)} />
+                    {word}
+                </div>
+                <div className="word-tile-back"></div>
             </div>
         </label>
     );

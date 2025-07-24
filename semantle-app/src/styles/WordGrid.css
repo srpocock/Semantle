@@ -33,67 +33,90 @@ fieldset {
 }
 
 .word-tile {
+    transform: translateZ(-35px);
+}
+
+.word-tile {
+    position: relative;
+    width: 150px;
+    height: 80px;
+    transform-style: preserve-3d;
+    transform: translateZ(-35px);
+}
+
+.word-tile-front, .word-tile-back {
+    position: absolute;
+    top: 0;
+    left: 0;
     display: flex;
     align-items: center;
     justify-content: center;
     width: 150px;
     height: 80px;
     border-radius: 5px;
-    color: black;
     font-size: 1.3rem;
-    transform: translateZ(-35px);
-    user-select: none;
-    cursor: pointer;
     backface-visibility: hidden;
+    user-select: none;
 }
 
-.word-tile[data-status="untested"]:has(input[type="checkbox"]:disabled) {
+.word-tile-front {
+    z-index: 0;
+    cursor: pointer;
+}
+
+.word-tile-back {
+    transform: rotateY(180deg);
+    background: var(--word-tile-correct-unchecked); /* or any back color */
+    z-index: 1;
+    cursor: unset;
+}
+
+.word-tile[data-status="untested"]:has(input[type="checkbox"]:disabled)>.word-tile-front {
     opacity: 0.7;
     cursor: unset;
 }
 
-.word-tile[data-status="untested"]:has(input[type="checkbox"]:not(:checked)) {
+.word-tile[data-status="untested"]:has(input[type="checkbox"]:not(:checked))>.word-tile-front {
     background: var(--word-tile-untested-unchecked);
 }
 
-.word-tile[data-status="untested"]:has(input[type="checkbox"]:checked) {
+.word-tile[data-status="untested"]:has(input[type="checkbox"]:checked)>.word-tile-front {
     color: var(--white);
     background: var(--word-tile-untested-checked);
 }
 
-.word-tile[data-status="incorrect"]:has(input[type="checkbox"]:disabled) {
+.word-tile[data-status="incorrect"]:has(input[type="checkbox"]:disabled)>.word-tile-front {
     opacity: 0.7;
     cursor: unset;
 }
 
-.word-tile[data-status="incorrect"]:has(input[type="checkbox"]:not(:checked)) {
+.word-tile[data-status="incorrect"]:has(input[type="checkbox"]:not(:checked))>.word-tile-front {
     background: var(--word-tile-incorrect-unchecked);
 }
 
-.word-tile[data-status="incorrect"]:has(input[type="checkbox"]:checked) {
+.word-tile[data-status="incorrect"]:has(input[type="checkbox"]:checked)>.word-tile-front {
     color: var(--white);
     background: var(--word-tile-incorrect-checked);
 }
 
-.word-tile[data-status="correct"]:has(input[type="checkbox"]:disabled) {
+.word-tile[data-status="correct"]:has(input[type="checkbox"]:disabled)>.word-tile-front {
     opacity: 0.7;
     cursor: unset;
 }
 
-.word-tile[data-status="correct"]:has(input[type="checkbox"]:not(:checked)) {
+.word-tile[data-status="correct"]:has(input[type="checkbox"]:not(:checked))>.word-tile-front {
     background: var(--word-tile-correct-unchecked);
 }
 
-.word-tile[data-status="correct"]:has(input[type="checkbox"]:checked) {
+.word-tile[data-status="correct"]:has(input[type="checkbox"]:checked)>.word-tile-front {
     color: var(--white);
     background: var(--word-tile-correct-checked);
 }
 
 .word-tile[data-status="flipped"] {
     animation: word-tile-flip-sequence 1s forwards;
-    transform: rotate3D(0,1,0, 180deg) translateZ(35px);
+    transform: rotateY(180deg) translateZ(35px);
     cursor: unset;
-    background: var(--word-tile-correct-unchecked);
 }
 
 @keyframes word-tile-flip-sequence {
@@ -104,10 +127,67 @@ fieldset {
     transform: translateZ(0px);
   }
   75% {
-    transform: rotate3D(0,1,0, 180deg) translateZ(0px);
+    transform: rotateY(180deg) translateZ(0px);
   }
   100% {
-    transform: rotate3D(0,1,0, 180deg) translateZ(35px);
+    transform: rotateY(180deg) translateZ(35px);
+  }
+}
+
+.word-tile[data-status="flipped"]>.word-tile-front {
+    animation: word-tile-front-flip-sequence 1s forwards;
+    color: white;
+    background: var(--word-tile-correct-unchecked);
+}
+
+@keyframes word-tile-front-flip-sequence {
+  0% {
+    background: var(--word-tile-untested-checked);
+    color: white;
+  }
+  15% {
+    background: var(--word-tile-untested-checked);
+    color: white;
+  }
+  25% {
+    background: var(--word-tile-correct-unchecked);
+    color: black;
+  }
+  30% {
+    background: var(--word-tile-correct-unchecked);
+    color: black;
+  }
+  75% {
+    background: var(--word-tile-correct-checked);
+    color: black;
+  }
+  100% {
+    background: var(--word-tile-correct-checked);
+    color: black;
+  }
+}
+
+.word-tile[data-status="flipped"]>.word-tile-back {
+    animation: word-tile-back-flip-sequence 1s forwards;
+    color: white;
+    background: var(--word-tile-correct-unchecked);
+}
+
+@keyframes word-tile-back-flip-sequence {
+  0% {
+    
+  }
+  25% {
+    background: var(--word-tile-correct-checked);
+  }
+  30% {
+    background: var(--word-tile-correct-checked);
+  }
+  75% {
+    background: var(--word-tile-correct-unchecked);
+  }
+  100% {
+    background: var(--word-tile-correct-unchecked);
   }
 }
 
