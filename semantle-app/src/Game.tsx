@@ -31,9 +31,6 @@ export default function Game () {
 
         if (Words.wordList) {
             
-            console.log("Here");
-
-
             const checkedWordStates: WordStatesType = {};
             checkedWords.forEach((word) => 
                 Words.inCorrectPair(word, gameStep) ? checkedWordStates[word] = WordState.Correct : checkedWordStates[word] = WordState.Incorrect
@@ -60,25 +57,32 @@ export default function Game () {
 
                 setTestedWords((prev) => (
                     {
-                        ...Object.fromEntries(Object.entries(prev).filter(([_key, value]) => value === WordState.Flipped)),
+                        ...Object.fromEntries(Object.entries(prev).filter(([ , value]) => value === WordState.Flipped)),
                         ...checkedWordStates
                     }));
             } else {
                 setAttemptsRemaining((prev) => prev - 1);
             }
             
-            if( attemptsRemaining <= 1) {
-                setGameState(GameState.Lost);
-            }
         }
     }
 
-    useEffect(() => console.log(`Game state changed to: ${gameState}`), [gameState]);
+    useEffect(() => { 
+        if(attemptsRemaining <= 0) { 
+            setGameState(GameState.Lost);
+        }
+    }, [attemptsRemaining]);
+
+    useEffect(() => { 
+        if(gameStep === 4) {
+            setGameState(GameState.Won);
+        }
+    }, [gameStep]);
 
     return (
         <section className="game">
             <h1>Semantle</h1>
-            <GameStatus/>
+            <GameStatus gameState={gameState}/>
             <WordGrid gameState={gameState} words={Words.wordList} checkedWords={checkedWords} testedWords={testedWords} onChecked={handleCheck} />
             <SubmissionPanel gameState={gameState} numCheckedWords={checkedWords.length} attemptsRemaining={attemptsRemaining} onSubmit={handleSubmit} />
         </section>
