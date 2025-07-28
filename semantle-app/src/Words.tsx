@@ -1,17 +1,18 @@
-const wordList: string[] = [
-  "cactus",
-  "umbrella",
-  "galaxy",
-  "whistle",
-  "marble",
-  "justice",
-  "keyboard",
-  "avalanche",
-  "lighthouse"
-];
+// const wordList: string[] = [
+//   "cactus",
+//   "umbrella",
+//   "galaxy",
+//   "whistle",
+//   "marble",
+//   "justice",
+//   "keyboard",
+//   "avalanche",
+//   "lighthouse"
+// ];
 
 type WordRelatednessType = [string, string, number];
 
+let wordList: string[] = [];
 const wordRelatedness: WordRelatednessType[] = [];
 const winningPairs: WordRelatednessType[] = [];
 
@@ -34,9 +35,26 @@ async function _getRelatednessAPI(word1: string, word2: string): Promise<number>
     }
 }
 
+async function loadWords(): Promise<string[]> {
+  try {
+    const response = await fetch('/assets/words.json');
+    if (!response.ok) {
+      throw new Error(`HTTP error! status: ${response.status}`);
+    }
+    const words: string[] = await response.json();
+    return words;
+  } catch (error) {
+    console.error("Could not fetch the words array:", error);
+    return []; // Return an empty array or handle the error appropriately
+  }
+}
+
+
 // This function must be called before using Words.relatedness, mostRelated, or leastRelated
 async function initialise(): Promise<void> {
     const promises: Promise<void>[] = [];
+
+    wordList = await loadWords();
 
     for (let i = 0; i < wordList.length; i++) {
         for (let j = i + 1; j < wordList.length; j++) {
@@ -54,9 +72,8 @@ async function initialise(): Promise<void> {
 
     await Promise.all(promises);
 
-    //wordRelatedness.forEach((pair) => console.log(`Relatedness between ${pair[0]} and ${pair[1]}: ${pair[2]}`));
 
-     // Sort by relatedness score descending
+    // Sort by relatedness score descending
     wordRelatedness.sort((a, b) => b[2] - a[2]);
 
     // Construct sets of winning words
@@ -71,11 +88,10 @@ async function initialise(): Promise<void> {
     }
 
     previouslyWinningPairs.clear();
-    console.log("Winning pairs:", winningPairs);
 }
 
 export default {
-    wordList,
+    get wordList() { return wordList },
     // getRelatedness (word1: string, word2: string): number { return wordRelatedness[wordList.indexOf(word1)][wordList.indexOf(word2)]; },
     inCorrectPair (word: string, gameStep: number): boolean { return winningPairs ? (winningPairs[gameStep][0] === word || winningPairs[gameStep][1] === word) : false; },
     initialise
